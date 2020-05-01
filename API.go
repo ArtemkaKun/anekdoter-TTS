@@ -14,7 +14,7 @@ func init() {
 }
 
 func GetAudioJoke(writer http.ResponseWriter, _ *http.Request) {
-	writer.Header().Set("Content-Type", "audio/ogg")
+	writer.Header().Set("Content-Type", "application/ogg")
 
 	WriteFileToRequest(writer)
 }
@@ -22,25 +22,12 @@ func GetAudioJoke(writer http.ResponseWriter, _ *http.Request) {
 func WriteFileToRequest(writer http.ResponseWriter) {
 	audioContent := CreateVoiceFile()
 
-	//fileHeader := make([]byte, 512) // 512 bytes is sufficient for http.DetectContentType() to work
-	//audioFile.Read(fileHeader)                     // read the first 512 bytes from the updateFile
-	//fileType := http.DetectContentType(fileHeader) // set the type
-	//
-	//fileInfo, _ := audioFile.Stat()
-	//fileSize := fileInfo.Size()
-	//
-	////Transmit the headers
 	writer.Header().Set("Expires", "0")
 	writer.Header().Set("Content-Transfer-Encoding", "binary")
 	writer.Header().Set("Content-Control", "private, no-transform, no-store, must-revalidate")
 	writer.Header().Set("Content-Disposition", "attachment; filename="+"output.ogg")
-	//writer.Header().Set("Content-Length", strconv.FormatInt(fileSize, 10))
-	//
-	////Send the file
-	//audioFile.Seek(0, 0)       // reset back to position since we've read first 512 bytes of data previously
 
 	writer.Write(audioContent)
-	//io.Copy(writer, audioContent) // transmit the updatefile bytes to the client
 }
 
 func GetJoke() (joke string) {
