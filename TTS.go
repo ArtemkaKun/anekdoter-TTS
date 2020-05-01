@@ -5,7 +5,6 @@ import (
 	"context"
 	"google.golang.org/api/option"
 	texttospeechpb "google.golang.org/genproto/googleapis/cloud/texttospeech/v1"
-	"io/ioutil"
 	"log"
 	"math/rand"
 )
@@ -60,16 +59,13 @@ func PrepareSynthesizer(joke string) (req texttospeechpb.SynthesizeSpeechRequest
 	return
 }
 
-func CreateVoiceFile() {
+func CreateVoiceFile() (audioContent []byte) {
 	synthesizer := PrepareSynthesizer(GetJoke())
 	resp, err := Client.SynthesizeSpeech(CTX, &synthesizer)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	filename := "output.ogg"
-	err = ioutil.WriteFile(filename, resp.AudioContent, 0644)
-	if err != nil {
-		log.Fatal(err)
-	}
+	audioContent = resp.AudioContent
+	return
 }
